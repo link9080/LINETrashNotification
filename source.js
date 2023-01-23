@@ -1,55 +1,55 @@
 const NOTIFICATION_CHOUMEI_CELL = "F1"
-const BURNABLE_GARBAGEQCELL = "D"
-const NON_BURNABLE_GARBAGEQCELL = "E"
+const BURNABLE_GARBAGEï¼¿CELL = "D"
+const NON_BURNABLE_GARBAGEï¼¿CELL = "E"
 const PET_GARBAGE_CELL = "F"
 const BURNABLE_GARBAGE_CHAR_CELL = "G"
 const NON_BURNABLE_GARBAGE_CHAR_CELL = "H"
 const PET_GARBAGE_CHAR_CELL = "I"
-const SPLIT_KEY = "E"
-const WEEKDAYS = ['“ú', 'Œ', '‰Î', '…', '–Ø', '‹à', '“y'];
+const SPLIT_KEY = "ãƒ»"
+const WEEKDAYS = ['æ—¥', 'æœˆ', 'ç«', 'æ°´', 'æœ¨', 'é‡‘', 'åœŸ'];
 const SYSTEM_DATE = new Date()
-const MESSAGE = "–{“ú*‚Í@‚Å‚·B"
-var channel_token = "viT7xnn8hvZ1Jzuu1S6nPQl1JAYr5lgbUzpO+OZWgGQF4EtH0hzUtQQsUNUsLvj1RCb4r4pDY2MAkLNHBP2sFOPjQEdUHCvPUOrOQ2Z5XHzi39D+mYdo/zOdJxJi3GtR/TX0wqazbSB92cfFnYZ4ZgdB04t89/1O/w1cDnyilFU="
+const MESSAGE = "æœ¬æ—¥*ã¯@ã§ã™ã€‚"
+var channel_token = "line@ã‚ˆã‚Šå–å¾—ã—ãŸãƒˆãƒ¼ã‚¯ãƒ³ã‚­ãƒ¼"
 let spreadSheetByActive = SpreadsheetApp.getActive()
 function myFunction() {
 
   let activesheet = spreadSheetByActive.getActiveSheet()
   let serchText = activesheet.getRange(NOTIFICATION_CHOUMEI_CELL).getDisplayValue()
   let _number = GetChouRow(activesheet);
-  //”R‚¦‚éƒSƒ~‚Ì“ú
+  //ç‡ƒãˆã‚‹ã‚´ãƒŸã®æ—¥
   let _burnableFlg = BurnableGarbageReturn(_number, activesheet,SYSTEM_DATE)
   console.info(_burnableFlg)
   if (_burnableFlg) {
-    let message = MESSAGE.replace("*",serchText).replace("@", "”R‚¦‚éƒSƒ~‚Ì“ú")
+    let message = MESSAGE.replace("*",serchText).replace("@", "ç‡ƒãˆã‚‹ã‚´ãƒŸã®æ—¥")
     push(message)
     return;
   }
-  //”R‚¦‚È‚¢ƒSƒ~
-  if (PetNonGarbage(NON_BURNABLE_GARBAGEQCELL, _number, activesheet,SYSTEM_DATE)) {
-    let message = MESSAGE.replace("*",serchText).replace("@", "”R‚¦‚È‚¢ƒSƒ~‚Ì“ú")
+  //ç‡ƒãˆãªã„ã‚´ãƒŸ
+  if (PetNonGarbage(NON_BURNABLE_GARBAGEï¼¿CELL, _number, activesheet,SYSTEM_DATE)) {
+    let message = MESSAGE.replace("*",serchText).replace("@", "ç‡ƒãˆãªã„ã‚´ãƒŸã®æ—¥")
     push(message)
     return;
   }
-  //ƒyƒbƒgƒ{ƒgƒ‹
+  //ãƒšãƒƒãƒˆãƒœãƒˆãƒ«
   if (PetNonGarbage(PET_GARBAGE_CELL, _number, activesheet,SYSTEM_DATE)) {
-    let message = MESSAGE.replace("*",serchText).replace("@", "ƒyƒbƒgƒ{ƒgƒ‹‚Ì“ú")
+    let message = MESSAGE.replace("*",serchText).replace("@", "ãƒšãƒƒãƒˆãƒœãƒˆãƒ«ã®æ—¥")
     push(message)
     return;
   }
 }
 
-//webhook‚©‚çÀs‚³‚ê‚é
+//webhookã‹ã‚‰å®Ÿè¡Œã•ã‚Œã‚‹
 function doPost(e) {
-  // WebHook‚Åæ“¾‚µ‚½JSONƒf[ƒ^‚ğƒIƒuƒWƒFƒNƒg‰»‚µAæ“¾
+  // WebHookã§å–å¾—ã—ãŸJSONãƒ‡ãƒ¼ã‚¿ã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåŒ–ã—ã€å–å¾—
   let eventData = JSON.parse(e.postData.contents).events[0];
 
-  //post‚©‚çó‚¯æ‚Á‚½ƒIƒuƒWƒFƒNƒg‚©‚çƒ†[ƒU[ID‚Æƒ^ƒCƒ€ƒXƒ^ƒ“ƒv‚ğæ“¾‚µƒXƒvƒŒƒbƒg‚É‘Ş”ğ
+  //postã‹ã‚‰å—ã‘å–ã£ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰ãƒ¦ãƒ¼ã‚¶ãƒ¼IDã¨ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ã‚’å–å¾—ã—ã‚¹ãƒ—ãƒ¬ãƒƒãƒˆã«é€€é¿
   let userId = eventData.source.userId;
   let timestamp = eventData.timestamp;
-  let sheet = spreadSheetByActive.getSheetByName("ƒV[ƒg2")
+  let sheet = spreadSheetByActive.getSheetByName("ã‚·ãƒ¼ãƒˆ2")
   let row = sheet.getLastRow()
 
-  //2s–Ú‚©‚çID‚ğŒŸõ‚µ‘¶İ‚·‚éê‡‚ÍA’Ç‰Á‚µ‚È‚¢
+  //2è¡Œç›®ã‹ã‚‰IDã‚’æ¤œç´¢ã—å­˜åœ¨ã™ã‚‹å ´åˆã¯ã€è¿½åŠ ã—ãªã„
   let idrange = sheet.getRange(2, 1, row).getValues().flat();
 
   if (idrange.indexOf(userId) === -1) {
@@ -57,66 +57,66 @@ function doPost(e) {
     sheet.getRange(row + 1, 2).setValue(timestamp)
   }
 
-  //æ“¾‚µ‚½ƒf[ƒ^‚©‚çA‰“š—p‚Ìƒg[ƒNƒ“‚ğæ“¾
+  //å–å¾—ã—ãŸãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã€å¿œç­”ç”¨ã®ãƒˆãƒ¼ã‚¯ãƒ³ã‚’å–å¾—
   let replyToken = eventData.replyToken;
-  //æ“¾‚µ‚½ƒf[ƒ^‚©‚çAƒƒbƒZ[ƒWí•Ê‚ğæ“¾
+  //å–å¾—ã—ãŸãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã€ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ç¨®åˆ¥ã‚’å–å¾—
   let messageType = eventData.message.type;
-  //í•Ê‚ªƒeƒLƒXƒg‚Ì‚İÀs
+  //ç¨®åˆ¥ãŒãƒ†ã‚­ã‚¹ãƒˆã®ã¿å®Ÿè¡Œ
   if(messageType == "text"){
-    //æ“¾‚µ‚½ƒf[ƒ^‚©‚çAƒ†[ƒU[‚ª“Še‚µ‚½ƒƒbƒZ[ƒW‚ğæ“¾
+    //å–å¾—ã—ãŸãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã€ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒæŠ•ç¨¿ã—ãŸãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—
     let userMessage = eventData.message.text;
-    //ƒeƒLƒXƒg‚ÉŠÜ‚Ü‚ê‚é•¶š—ñ‚É‚æ‚è•Ô“š‚·‚éƒƒbƒZ[ƒW‚ğİ’è
-    sheet = spreadSheetByActive.getSheetByName("ƒV[ƒg1")
+    //ãƒ†ã‚­ã‚¹ãƒˆã«å«ã¾ã‚Œã‚‹æ–‡å­—åˆ—ã«ã‚ˆã‚Šè¿”ç­”ã™ã‚‹ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¨­å®š
+    sheet = spreadSheetByActive.getSheetByName("ã‚·ãƒ¼ãƒˆ1")
     let serchText = sheet.getRange(NOTIFICATION_CHOUMEI_CELL).getDisplayValue()
     let checkDay = SYSTEM_DATE
     let _number = GetChouRow(sheet)
     let lastrow = sheet.getLastRow()
-    //”R‚¦‚éƒSƒ~
+    //ç‡ƒãˆã‚‹ã‚´ãƒŸ
     let bunable = sheet.getRange(BURNABLE_GARBAGE_CHAR_CELL+2 + ":" + BURNABLE_GARBAGE_CHAR_CELL+lastrow).getValues().flat()
     let nonBunable = sheet.getRange(NON_BURNABLE_GARBAGE_CHAR_CELL+2 + ":" + NON_BURNABLE_GARBAGE_CHAR_CELL+lastrow).getValues().flat()
     let pet = sheet.getRange(PET_GARBAGE_CHAR_CELL+2 + ":" + PET_GARBAGE_CHAR_CELL+lastrow).getValues().flat()
     let replyMessage;
-    //ƒŠƒvƒ‰ƒCƒeƒLƒXƒg‚ÉŠY“–‚·‚éƒSƒ~‚Ì“ú‚Ü‚Åƒ‹[ƒvAŠY“–‚µ‚È‚¢•¶š—ñ‚Ìê‡‚Íƒ‹[ƒv‚ğ‚Ê‚¯‚Äˆ—I—¹
+    //ãƒªãƒ—ãƒ©ã‚¤ãƒ†ã‚­ã‚¹ãƒˆã«è©²å½“ã™ã‚‹ã‚´ãƒŸã®æ—¥ã¾ã§ãƒ«ãƒ¼ãƒ—ã€è©²å½“ã—ãªã„æ–‡å­—åˆ—ã®å ´åˆã¯ãƒ«ãƒ¼ãƒ—ã‚’ã¬ã‘ã¦å‡¦ç†çµ‚äº†
     var replyOkflg = false;
     for(let i = 0;;i++){
       if(bunable.indexOf(userMessage) != -1){
         replyOkflg = true;
         if(BurnableGarbageReturn(_number, sheet,checkDay)){
-            replyMessage = serchText + "‚Í\n" + yyyyMMdd(checkDay) +"‚ª”R‚¦‚éƒSƒ~‚Ì“ú‚Å‚·B"
+            replyMessage = serchText + "ã¯\n" + yyyyMMdd(checkDay) +"ãŒç‡ƒãˆã‚‹ã‚´ãƒŸã®æ—¥ã§ã™ã€‚"
             break;
         }
       }
       if(nonBunable.indexOf(userMessage) != -1){
         replyOkflg = true;
-        if(PetNonGarbage(NON_BURNABLE_GARBAGEQCELL, _number, sheet,checkDay)){
-            replyMessage = serchText + "‚Í\n" + yyyyMMdd(checkDay) +"‚ª”R‚¦‚È‚¢ƒSƒ~‚Ì“ú‚Å‚·B"
+        if(PetNonGarbage(NON_BURNABLE_GARBAGEï¼¿CELL, _number, sheet,checkDay)){
+            replyMessage = serchText + "ã¯\n" + yyyyMMdd(checkDay) +"ãŒç‡ƒãˆãªã„ã‚´ãƒŸã®æ—¥ã§ã™ã€‚"
             break;
         }
       }
       if(pet.indexOf(userMessage) != -1){
         replyOkflg = true;
         if(PetNonGarbage(PET_GARBAGE_CELL, _number, sheet,checkDay)){
-            replyMessage = serchText + "‚Í\n" + yyyyMMdd(checkDay) +"‚ªƒyƒbƒgƒ{ƒgƒ‹ƒSƒ~‚Ì“ú‚Å‚·B"
+            replyMessage = serchText + "ã¯\n" + yyyyMMdd(checkDay) +"ãŒãƒšãƒƒãƒˆãƒœãƒˆãƒ«ã‚´ãƒŸã®æ—¥ã§ã™ã€‚"
             break
         }
       }
       if(!replyOkflg){
         let temp =  bunable.filter(value => value != "").join()
-        replyMessage = "”R‚¦‚éƒSƒ~‚Ìê‡‚Í\n" + temp;
+        replyMessage = "ç‡ƒãˆã‚‹ã‚´ãƒŸã®å ´åˆã¯\n" + temp;
         temp = nonBunable.filter(value => value != "").join()
-        replyMessage += "\n”R‚¦‚È‚¢ƒSƒ~‚Ìê‡‚Í\n" + temp;
+        replyMessage += "\nç‡ƒãˆãªã„ã‚´ãƒŸã®å ´åˆã¯\n" + temp;
         temp = pet.filter(value => value != "").join()
-        replyMessage += "\nƒyƒbƒgƒ{ƒgƒ‹ƒSƒ~‚Ìê‡‚Í\n" + temp;
-        replyMessage += "\n‚ğƒZƒbƒg‚µ‚Ä‚­‚¾‚³‚¢B"
+        replyMessage += "\nãƒšãƒƒãƒˆãƒœãƒˆãƒ«ã‚´ãƒŸã®å ´åˆã¯\n" + temp;
+        replyMessage += "\nã‚’ã‚»ãƒƒãƒˆã—ã¦ãã ã•ã„ã€‚"
         break;
       }
 
       checkDay.setDate(checkDay.getDate() + 1)
     }
-    // ‰“šƒƒbƒZ[ƒW—p‚ÌAPI URL‚ğ’è‹`
+    // å¿œç­”ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ç”¨ã®API URLã‚’å®šç¾©
     let url = 'https://api.line.me/v2/bot/message/reply';
-    //ƒ†[ƒU[‚©‚ç‚Ì“ŠeƒƒbƒZ[ƒW‚©‚ç‰“šƒƒbƒZ[ƒW‚ğ—pˆÓ
-    //APIƒŠƒNƒGƒXƒg‚ÉƒZƒbƒg‚·‚éƒyƒCƒ[ƒh’l‚ğİ’è‚·‚é
+    //ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‹ã‚‰ã®æŠ•ç¨¿ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‹ã‚‰å¿œç­”ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç”¨æ„
+    //APIãƒªã‚¯ã‚¨ã‚¹ãƒˆæ™‚ã«ã‚»ãƒƒãƒˆã™ã‚‹ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰å€¤ã‚’è¨­å®šã™ã‚‹
     let payload = {
       'replyToken': replyToken,
       'messages': [{
@@ -124,14 +124,14 @@ function doPost(e) {
         'text': replyMessage
       }]
     };
-    //HTTPS‚ÌPOST‚ÌƒIƒvƒVƒ‡ƒ“ƒpƒ‰ƒ[ƒ^‚ğİ’è‚·‚é
+    //HTTPSã®POSTæ™‚ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹
     let options = {
       'payload': JSON.stringify(payload),
       'myamethod': 'POST',
       'headers': { "Authorization": "Bearer " + channel_token },
       'contentType': 'application/json'
     };
-    //LINE Messaging API‚ÉƒŠƒNƒGƒXƒg‚µAƒ†[ƒU[‚©‚ç‚Ì“Še‚É•Ô“š‚·‚é
+    //LINE Messaging APIã«ãƒªã‚¯ã‚¨ã‚¹ãƒˆã—ã€ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‹ã‚‰ã®æŠ•ç¨¿ã«è¿”ç­”ã™ã‚‹
     UrlFetchApp.fetch(url, options);
   }
 }
@@ -144,8 +144,8 @@ function push(text) {
     'Authorization': 'Bearer ' + channel_token,
   };
 
-  //ƒƒbƒZ[ƒW‚ğ‘—‚éÛƒXƒvƒŒƒbƒhƒV[ƒg‚©‚çID‚ğæ“¾‚µ‚Ä‘—M‚·‚é
-  let sheet = spreadSheetByActive.getSheetByName("ƒV[ƒg2")
+  //ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ã‚‹éš›ã‚¹ãƒ—ãƒ¬ãƒƒãƒ‰ã‚·ãƒ¼ãƒˆã‹ã‚‰IDã‚’å–å¾—ã—ã¦é€ä¿¡ã™ã‚‹
+  let sheet = spreadSheetByActive.getSheetByName("ã‚·ãƒ¼ãƒˆ2")
   let row = sheet.getLastRow()
   let idrange = sheet.getRange(2, 1, row).getValues().flat();
   idrange = idrange.filter(item => item != "");
@@ -177,14 +177,14 @@ function GetChouRow(activesheet){
   let serchText = activesheet.getRange(NOTIFICATION_CHOUMEI_CELL).getDisplayValue()
   let textFinder = activesheet.createTextFinder(serchText);
   let chouCell = textFinder.findAll()[1].getA1Notation();
-  //Œ©‚Â‚©‚Á‚½ƒZƒ‹‚Ìs‚ğæ“¾
+  //è¦‹ã¤ã‹ã£ãŸã‚»ãƒ«ã®è¡Œã‚’å–å¾—
   return chouCell.replace(/[^0-9]/g, '');
 }
 
 function BurnableGarbageReturn(_number, activesheet,paraDate) {
-  //ƒVƒXƒeƒ€“ú‚ª”R‚¦‚éƒSƒ~‚Ì“ú‚©”»’è
-  let _burnableGarbageWeekDay = activesheet.getRange(BURNABLE_GARBAGEQCELL + _number).getDisplayValue()
-  _burnableGarbageWeekDay = _burnableGarbageWeekDay.replace(/—j“ú/g, "")
+  //ã‚·ã‚¹ãƒ†ãƒ æ—¥ãŒç‡ƒãˆã‚‹ã‚´ãƒŸã®æ—¥ã‹åˆ¤å®š
+  let _burnableGarbageWeekDay = activesheet.getRange(BURNABLE_GARBAGEï¼¿CELL + _number).getDisplayValue()
+  _burnableGarbageWeekDay = _burnableGarbageWeekDay.replace(/æ›œæ—¥/g, "")
   let weekList = _burnableGarbageWeekDay.split(SPLIT_KEY);
   let dateDay = paraDate.getDay()
   let rtn = false
@@ -198,22 +198,22 @@ function BurnableGarbageReturn(_number, activesheet,paraDate) {
 }
 
 function PetNonGarbage(cell, row, sheat,paraDate) {
-  //ƒVƒXƒeƒ€“ú‚ªƒyƒbƒgƒ{ƒgƒ‹‚Ì“ú‚©”R‚¦‚È‚¢ƒSƒ~‚Ì”»’è
+  //ã‚·ã‚¹ãƒ†ãƒ æ—¥ãŒãƒšãƒƒãƒˆãƒœãƒˆãƒ«ã®æ—¥ã‹ç‡ƒãˆãªã„ã‚´ãƒŸã®åˆ¤å®š
   let _weekDayRange = sheat.getRange(cell + row).getDisplayValue()
-  //‘æn—j“ú‚Ì”’l‚ğæ“¾
+  //ç¬¬næ›œæ—¥ã®æ•°å€¤ã‚’å–å¾—
   let hankaku = hankaku2Zenkaku(_weekDayRange)
   let _weekDayNumber = hankaku.replace(/[^0-9]/g, '')
   console.log(_weekDayNumber)
-  //‰½—j“ú‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é‚©‚Ìƒ`ƒFƒbƒN
+  //ä½•æ›œæ—¥ãŒå«ã¾ã‚Œã¦ã„ã‚‹ã‹ã®ãƒã‚§ãƒƒã‚¯
   let weekday
   WEEKDAYS.some(function (s, idx) {
-    if (_weekDayRange.indexOf(s + '—j') != -1) {
+    if (_weekDayRange.indexOf(s + 'æ›œ') != -1) {
       weekday = idx
       return true
     }
   })
   console.log(weekday)
-  //ƒVƒXƒeƒ€“ú‚Í‘æn”Ô–Ú‚Ìn—j“ú‚©æ“¾
+  //ã‚·ã‚¹ãƒ†ãƒ æ—¥ã¯ç¬¬nç•ªç›®ã®næ›œæ—¥ã‹å–å¾—
   let _nowWeekDay = getDayAndCount(paraDate)
   console.log(_nowWeekDay)
   console.log(_nowWeekDay.day == weekday && _nowWeekDay.count == _weekDayNumber)
@@ -224,7 +224,7 @@ function yyyyMMdd(dt){
   var y = dt.getFullYear();
   var m = ("00" + (dt.getMonth()+1)).slice(-2);
   var d = ("00" + (dt.getDate())).slice(-2);
-  return y + "”N"+ m + "Œ" +  d+ "“ú";
+  return y + "å¹´"+ m + "æœˆ" +  d+ "æ—¥";
 }
 
 function getDayAndCount(date) {
@@ -232,7 +232,7 @@ function getDayAndCount(date) {
 }
 
 function hankaku2Zenkaku(str) {
-  return str.replace(/[‚`-‚y‚-‚š‚O-‚X]/g, function (s) {
+  return str.replace(/[ï¼¡-ï¼ºï½-ï½šï¼-ï¼™]/g, function (s) {
     return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
   });
 }
